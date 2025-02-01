@@ -1,0 +1,35 @@
+class Solution:
+	def isWordExist(self, mat, word):
+		#Code here
+		n, m = len(mat), len(mat[0])  # Get matrix dimensions
+
+        def dfs(i, j, k):
+            # Base Case: If all characters of word are found
+            if k == len(word):
+                return True
+            
+            # Boundary conditions and character match check
+            if i < 0 or i >= n or j < 0 or j >= m or mat[i][j] != word[k]:
+                return False
+            
+            # Mark the cell as visited temporarily
+            temp = mat[i][j]
+            mat[i][j] = '#'  # Prevent revisiting the same cell
+            
+            # Explore all four directions
+            result = (dfs(i + 1, j, k + 1) or  # Down
+                      dfs(i - 1, j, k + 1) or  # Up
+                      dfs(i, j + 1, k + 1) or  # Right
+                      dfs(i, j - 1, k + 1))    # Left
+            
+            # Restore the cell for further searches
+            mat[i][j] = temp
+            return result
+
+        # Start DFS from each cell that matches the first character
+        for i in range(n):
+            for j in range(m):
+                if mat[i][j] == word[0] and dfs(i, j, 0):
+                    return True
+        
+        return False
